@@ -27,7 +27,6 @@ include $(BUILD_HOST_EXECUTABLE)
 
 $(call dist-for-goals, dist_files, $(LOCAL_BUILT_MODULE))
 
-
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
 	yaffs2/utils/mkyaffs2image.c \
@@ -40,8 +39,12 @@ LOCAL_CFLAGS+=   -Wmissing-prototypes -Wredundant-decls -Wnested-externs -Winlin
 LOCAL_CFLAGS+=   -DS_IWRITE=0200 -DS_IREAD=0400
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/yaffs2
 LOCAL_MODULE := mkyaffs2image
+ifeq ($(HAVE_SELINUX), true)
+LOCAL_C_INCLUDES += external/libselinux/include
+LOCAL_STATIC_LIBRARIES += libselinux
+LOCAL_CFLAGS += -DHAVE_SELINUX
+endif # HAVE_SELINUX
 include $(BUILD_EXECUTABLE)
-
 
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := \
@@ -57,6 +60,11 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH)/yaffs2
 LOCAL_MODULE := libmkyaffs2image
 LOCAL_MODULE_TAGS := eng
 LOCAL_CFLAGS += -Dmain=mkyaffs2image_main
+ifeq ($(HAVE_SELINUX), true)
+LOCAL_C_INCLUDES += external/libselinux/include
+LOCAL_STATIC_LIBRARIES += libselinux
+LOCAL_CFLAGS += -DHAVE_SELINUX
+endif # HAVE_SELINUX
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -69,6 +77,7 @@ LOCAL_CFLAGS+=   -Wmissing-prototypes -Wredundant-decls -Wnested-externs -Winlin
 LOCAL_CFLAGS+=   -DS_IWRITE=0200 -DS_IREAD=0400
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/yaffs2
 LOCAL_CFLAGS += -Dmain=unyaffs_main
+
 include $(BUILD_STATIC_LIBRARY)
 
 include $(CLEAR_VARS)
@@ -92,5 +101,3 @@ LOCAL_CFLAGS+=   -Wmissing-prototypes -Wredundant-decls -Wnested-externs -Winlin
 LOCAL_CFLAGS+=   -DS_IWRITE=0200 -DS_IREAD=0400
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/yaffs2
 include $(BUILD_HOST_EXECUTABLE)
-
-
